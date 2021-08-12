@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.search.SearchCommand;
 import io.micronaut.configuration.picocli.PicocliRunner;
 import io.micronaut.context.ApplicationContext;
 
@@ -9,7 +10,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "micronautdemo", description = "...",
-        mixinStandardHelpOptions = true)
+        mixinStandardHelpOptions = true, subcommands = {SearchCommand.class})
 public class MicronautdemoCommand implements Runnable {
 
     @Option(names = {"-v", "--verbose"}, description = "...")

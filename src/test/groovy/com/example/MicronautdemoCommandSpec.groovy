@@ -15,17 +15,18 @@ class MicronautdemoCommandSpec extends Specification {
 
     @Shared @AutoCleanup ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)
 
-    void "test micronautdemo with command line option"() {
+    void "test micronautdemo search command"() {
         given:
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
         PrintStream out = System.out
         System.setOut(new PrintStream(baos))
 
-        String[] args = ['-v'] as String[]
+        String[] args = ["search", "-q", "merge maps", "-t", "java", "--verbose"] as String[]
         PicocliRunner.run(MicronautdemoCommand, ctx, args)
+        out.println baos.toString()
 
         expect:
-        baos.toString().contains('Hi!')
+        baos.toString().contains("Search command running...")
     }
 }
 

@@ -4,6 +4,10 @@ plugins {
     id("io.micronaut.application") version "1.5.4"
 }
 
+test {
+    useJUnitPlatform()
+}
+
 version = "0.1"
 group = "com.example"
 
@@ -28,6 +32,8 @@ dependencies {
     implementation("javax.annotation:javax.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
     compileOnly("org.graalvm.nativeimage:svm")
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
     implementation("io.micronaut:micronaut-validation")
 
