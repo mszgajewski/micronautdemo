@@ -4,10 +4,6 @@ plugins {
     id("io.micronaut.application") version "1.5.4"
 }
 
-test {
-    useJUnitPlatform()
-}
-
 version = "0.1"
 group = "com.example"
 

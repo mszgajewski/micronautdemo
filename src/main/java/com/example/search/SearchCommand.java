@@ -1,7 +1,12 @@
 package com.example.search;
 
+import com.example.api.MicronautdemoHttpClient;
+import com.example.api.Question;;
+import picocli.CommandLine.Help.Ansi;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
+
+import javax.inject.Inject;
 
 @Command(name ="search", description = "Search questions matching criteria.",
 mixinStandardHelpOptions = true)
@@ -21,8 +26,36 @@ final public class SearchCommand implements Runnable {
     @Option(names = {"--verbose"}, description = "Print verbose output.")
     boolean verbose;
 
+    @Inject
+    MicronautdemoHttpClient client;
+
     @Override
     public void run() {
-        System.out.println("Search command running...");
+        var response = client.search(query, tag, limit, sort);
+
+        response.items.stream()
+                .map(SearchCommand::formatQuestion)
+                .forEach(System.out::println);
+
+        if (verbose) {
+            System.out.printf(
+                    "\nItems size: %d | Quota max: %d | Quota remaining: %d | Has more: %s\n",
+                    response.items.size(),
+                    response.quotaMax,
+                    response.quotaRemaining,
+                    response.hasMore
+            );
+        }
+    }
+
+    static private String formatQuestion(final Question question) {
+        return Ansi.AUTO.string(String.format(
+                "@|bold,fg(green) %s|@ %d|%d @|bold,fg(yellow) %s|@\n      %s",
+                question.accepted ? "✔" : "",
+                question.score,
+                question.answers,
+                question.title,
+                question.link
+        ));
     }
 }

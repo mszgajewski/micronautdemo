@@ -26,7 +26,7 @@ class MicronautdemoCommandSpec extends Specification {
         out.println baos.toString()
 
         expect:
-        baos.toString().contains("Search command running...")
+        baos.toString() =~ $/✔? \d+\|\d+ [^\n]+\n {6}https://stackoverflow.com/questions/\d+/[a-z0-9\-]+/$
     }
 }
 
