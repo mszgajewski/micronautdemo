@@ -2,6 +2,7 @@ package com.example.search;
 
 import com.example.api.MicronautdemoHttpClient;
 import com.example.api.Question;;
+import com.example.api.SearchHttpRequest;
 import picocli.CommandLine.Help.Ansi;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
@@ -29,9 +30,13 @@ final public class SearchCommand implements Runnable {
     @Inject
     MicronautdemoHttpClient client;
 
+    @Inject
+    SearchHttpRequest request;
     @Override
     public void run() {
-        var response = client.search(query, tag, limit, sort);
+        //var response = client.search(query, tag, limit, sort);
+        var response = request.execute(query, tag, limit, sort);
+
 
         response.items.stream()
                 .map(SearchCommand::formatQuestion)
