@@ -1,5 +1,6 @@
 package com.example.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.http.uri.UriBuilder;
@@ -10,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.rmi.RemoteException;
+import java.util.zip.GZIPInputStream;
 
 @Singleton
 public class SearchHttpRequest {
@@ -39,8 +41,15 @@ public class SearchHttpRequest {
 
         try {
             var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+
+            var input = response.headers().firstValue("Content-Encoding").orElse("").equals("gzip") ?
+                    new GZIPInputStream(response.body()) :
+                    response.body();
+
+            return mapper.readValue(input, new TypeReference<>(){});
+
         } catch (IOException | InterruptedException e) {
-            throw new RemoteException(e);
+            throw new RuntimeException(e);
         }
     }
 }
